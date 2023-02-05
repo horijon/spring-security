@@ -24,3 +24,16 @@ select *
 from users;
 select *
 from authorities;
+
+ignore insertion into users and authorities tables, now we are to use our own database structures
+create table customer(
+                         id int not null auto_increment,
+                         email varchar(50) not null,
+                         pwd varchar(200) not null,
+                         role varchar(45) not null,
+                         primary key (id)
+);
+
+
+INSERT INTO `customer` (`email`, `pwd`, `role`)
+VALUES ('johndoe@example.com', '54321', 'admin');

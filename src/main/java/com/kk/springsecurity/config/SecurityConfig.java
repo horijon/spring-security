@@ -3,16 +3,9 @@ package com.kk.springsecurity.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfig {
@@ -55,14 +48,23 @@ public class SecurityConfig {
 //        return new InMemoryUserDetailsManager(admin, user);
 //    }
 
-    // Step - 3 AuthenticationManager uses AuthenticationProvider
-    // Step - 4 AuthenticationProvider uses UserDetailsManager
-    // Step - 5.1 - UserDetailsService is a parent of UserDetailsManager, so same thing as Step 5.1,
-    // by default it is used by JdbcUserDetailsManager that has hard coded table structure for entities like users, authorities
-    @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
-    }
+//    // Another better style implementation, that uses database instead of in memory
+//    // Step - 3 AuthenticationManager uses AuthenticationProvider
+//    // Step - 4 AuthenticationProvider uses UserDetailsManager
+//    // Step - 5.1 - UserDetailsService is a parent of UserDetailsManager, so same thing as Step 5.1,
+//    // by default it is used by JdbcUserDetailsManager that has hard coded table structure for entities like users, authorities
+//    @Bean
+//    public UserDetailsService userDetailsService(DataSource dataSource) {
+//        return new JdbcUserDetailsManager(dataSource);
+//    }
+
+//     Another better style implementation, that uses database schema structure of our own style and user details logic
+//     Step - 3 AuthenticationManager uses AuthenticationProvider
+//     Step - 4 AuthenticationProvider uses UserDetailsManager
+//     Step - 5.1 - UserDetailsManager
+//     Another implementation, that uses database of our own logic and database structure instead of hardcoded UserDetailsService
+//     look for com.kk.springsecurity.config.CustomerUserDetails
+//
 
     // Step - 4 AuthenticationProvider uses PasswordEncoder
     // Step - 5.2 - PasswordEncoder
