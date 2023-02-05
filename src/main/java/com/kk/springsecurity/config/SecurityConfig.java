@@ -19,7 +19,9 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers("/account", "/balance", "/loans", "/cards").authenticated()
+                // no authentication required or is public faced apis that doesn't need to be authenticated
                 .requestMatchers("/contact", "/notices").permitAll()
+                // denyAll is only used to restrict some urls temporarily, may be to fix something in that api and/or is under development
                 .requestMatchers("/welcome").denyAll());
         http.formLogin();
         http.httpBasic();
