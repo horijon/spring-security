@@ -12,8 +12,11 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Setter
 public class Customer {
+
     @Id
+    // the generator is native and is refering to GenericGenerator with name native
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    // strategy native means sequence generation is depended on underlying database
     @GenericGenerator(name = "native", strategy = "native")
     private int id;
     private String email;
