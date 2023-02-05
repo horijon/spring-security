@@ -5,10 +5,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfig {
@@ -35,20 +39,29 @@ public class SecurityConfig {
         return http.build();
     }
 
+//    // Step - 3 AuthenticationManager uses AuthenticationProvider
+//    // Step - 4 AuthenticationProvider uses UserDetailsManager
+//    // Step - 5.1 - UserDetailsManager
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsManager() {
+//        UserDetails admin = User.withUsername("admin")
+//                .password("123")
+//                .authorities("admin")
+//                .build();
+//        UserDetails user = User.withUsername("user")
+//                .password("123")
+//                .authorities("read")
+//                .build();
+//        return new InMemoryUserDetailsManager(admin, user);
+//    }
+
     // Step - 3 AuthenticationManager uses AuthenticationProvider
     // Step - 4 AuthenticationProvider uses UserDetailsManager
-    // Step - 5.1 - UserDetailsManager
+    // Step - 5.1 - UserDetailsService is a parent of UserDetailsManager, so same thing as Step 5.1,
+    // by default it is used by JdbcUserDetailsManager that has hard coded table structure for entities like users, authorities
     @Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-        UserDetails admin = User.withUsername("admin")
-                .password("123")
-                .authorities("admin")
-                .build();
-        UserDetails user = User.withUsername("user")
-                .password("123")
-                .authorities("read")
-                .build();
-        return new InMemoryUserDetailsManager(admin, user);
+    public UserDetailsService userDetailsService(DataSource dataSource) {
+        return new JdbcUserDetailsManager(dataSource);
     }
 
     // Step - 4 AuthenticationProvider uses PasswordEncoder
