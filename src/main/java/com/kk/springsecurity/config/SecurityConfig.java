@@ -3,7 +3,7 @@ package com.kk.springsecurity.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -70,10 +70,18 @@ public class SecurityConfig {
 //     look for com.kk.springsecurity.config.CustomerUserDetails
 //
 
+//    // Step - 4 AuthenticationProvider uses PasswordEncoder
+//    // Step - 5.2 - PasswordEncoder
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return NoOpPasswordEncoder.getInstance();
+//    }
+
+    // Another better style implementation, that used Bcrypt algorithm
     // Step - 4 AuthenticationProvider uses PasswordEncoder
     // Step - 5.2 - PasswordEncoder
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 }
