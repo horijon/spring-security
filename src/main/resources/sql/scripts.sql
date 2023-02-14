@@ -100,7 +100,7 @@ CREATE TABLE cards (
                        CONSTRAINT card_customer_ibfk_1 FOREIGN KEY (customer_id) REFERENCES customer (customer_id) ON DELETE CASCADE
 );
 
-INSERT INTO sql12595969.cards (card_number, customer_id, card_type, total_limit, amount_used, available_amount,
+INSERT INTO cards (card_number, customer_id, card_type, total_limit, amount_used, available_amount,
                                create_dt)
 VALUES ('4565XXXX4656', 1, 'Credit', 10000, 500, 9500, '2023-02-08'),
        ('3455XXXX8673', 1, 'Credit', 7500, 600, 6900, '2023-02-08'),
@@ -117,7 +117,7 @@ CREATE TABLE notice_details (
                                 PRIMARY KEY (notice_id)
 );
 
-INSERT INTO sql12595969.notice_details (notice_summary, notice_details, notic_beg_dt, notic_end_dt, create_dt,
+INSERT INTO notice_details (notice_summary, notice_details, notic_beg_dt, notic_end_dt, create_dt,
                                         update_dt)
 VALUES ('Home Loan Interest rates reduced',
         'Home loan interest rates are reduced as per the goverment guidelines. The updated rates will be effective immediately',
