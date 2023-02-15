@@ -62,7 +62,15 @@ public class SecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
         http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class); // this way the client application can also see the csrf token otherwise by default only the server will be able to see the csrf token
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/account", "/balance", "/loans", "/cards", "/user").authenticated()
+                /*.requestMatchers("/account").hasAuthority("VIEWACCOUNT")
+                .requestMatchers("/balance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
+                .requestMatchers("/loans").hasAuthority("VIEWLOANS")
+                .requestMatchers("/cards").hasAuthority("VIEWCARDS")*/
+                .requestMatchers("/account").hasRole("USER")
+                .requestMatchers("/balance").hasAnyRole("USER","ADMIN")
+                .requestMatchers("/loans").hasRole("USER")
+                .requestMatchers("/cards").hasRole("USER")
+                .requestMatchers("/user").authenticated()
                 .requestMatchers("/notices", "/contact", "/register").permitAll()
                 .requestMatchers("/welcome").denyAll());
         http.formLogin();
