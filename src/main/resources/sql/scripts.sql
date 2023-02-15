@@ -173,6 +173,7 @@ VALUES (1, 'VIEWACCOUNT'),
        (1, 'VIEWLOANS'),
        (1, 'VIEWBALANCE');
 
+-- role usage instead of granular authorities
 DELETE FROM authorities;
 
 INSERT INTO authorities (customer_id, name)
