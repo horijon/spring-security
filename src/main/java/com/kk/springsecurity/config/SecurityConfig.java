@@ -1,5 +1,8 @@
 package com.kk.springsecurity.config;
 
+import com.kk.springsecurity.filter.AuthoritiesLoggingAfterFilter;
+import com.kk.springsecurity.filter.AuthoritiesLoggingAtFilter;
+import com.kk.springsecurity.filter.RequestValidationBeforeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -61,13 +64,17 @@ public class SecurityConfig {
                 .and().csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("/contact", "/register")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
         http.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class); // this way the client application can also see the csrf token otherwise by default only the server will be able to see the csrf token
+        http.addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class);
+        // the order of AuthoritiesLoggingAtFilter execution may be sometimes either before or other times after BasicAuthenticationFilter
+        http.addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class);
         http.authorizeHttpRequests((authorize) -> authorize
                 /*.requestMatchers("/account").hasAuthority("VIEWACCOUNT")
                 .requestMatchers("/balance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
                 .requestMatchers("/loans").hasAuthority("VIEWLOANS")
                 .requestMatchers("/cards").hasAuthority("VIEWCARDS")*/
                 .requestMatchers("/account").hasRole("USER")
-                .requestMatchers("/balance").hasAnyRole("USER","ADMIN")
+                .requestMatchers("/balance").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/loans").hasRole("USER")
                 .requestMatchers("/cards").hasRole("USER")
                 .requestMatchers("/user").authenticated()
