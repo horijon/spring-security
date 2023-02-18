@@ -87,7 +87,9 @@ public class SecurityConfig {
                 .requestMatchers("/cards").hasAuthority("VIEWCARDS")*/
                 .requestMatchers("/account").hasRole("USER")
                 .requestMatchers("/balance").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/loans").hasRole("USER")
+                // here we are going to only check authentication for /loans here
+                // and the authorization will be checked in the method level using @EnableMethodSecurity and @PreAuthorize/@PostAuthorize
+                .requestMatchers("/loans").authenticated()
                 .requestMatchers("/cards").hasRole("USER")
                 .requestMatchers("/user").authenticated()
                 .requestMatchers("/notices", "/contact", "/register").permitAll()
