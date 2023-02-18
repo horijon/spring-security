@@ -2,7 +2,7 @@ package com.kk.springsecurity.controller;
 
 import com.kk.springsecurity.model.Contact;
 import com.kk.springsecurity.repository.ContactRepository;
-import org.springframework.security.access.prepost.PreFilter;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,9 +26,14 @@ public class ContactController {
      eg; if we have 5 contants in the list, and if there are 2 contacts with contactName == 'Test',
      then the contacts list will only have 3 contacts
      */
-    // to apply prefilter, the input must be of type collection interface eg; List<Contact>
-    // to apply postfilter, the output must be of type collection interface.
-    @PreFilter("filterObject.contactName != 'Test'")
+    /*
+     in case of preFilter, only contacts with contactName other than 'Test' will be processed.
+     in case of PostFilter, only contacts with contactName other than 'Test' will be send in the response.
+     */
+    // to apply PreFilter, the input must be of type collection interface eg; List<Contact>
+    // to apply PostFilter, the output must be of type collection interface.
+    // @PreFilter("filterObject.contactName != 'Test'")
+    @PostFilter("filterObject.contactName != 'Test'")
     public List<Contact> saveContactInquiryDetails(@RequestBody List<Contact> contacts) {
         // need to handle empty contacts scenario otherwise we will get IndexOutOfBoundsException.
         Contact contact = contacts.get(0);
