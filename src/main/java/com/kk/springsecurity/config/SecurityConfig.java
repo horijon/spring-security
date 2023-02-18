@@ -1,7 +1,10 @@
 package com.kk.springsecurity.config;
 
+import com.kk.springsecurity.constants.SecurityConstants;
 import com.kk.springsecurity.filter.AuthoritiesLoggingAfterFilter;
 import com.kk.springsecurity.filter.AuthoritiesLoggingAtFilter;
+import com.kk.springsecurity.filter.JWTTokenGeneratorFilter;
+import com.kk.springsecurity.filter.JWTTokenValidatorFilter;
 import com.kk.springsecurity.filter.RequestValidationBeforeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,14 +38,21 @@ public class SecurityConfig {
          *  2) The Session & JSessionID will not be created by default. Inorder to create a session after intial login, we need to configure
          *      sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)) like shown below.
          */
-        http.securityContext().requireExplicitSave(false)
-                .and().sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+
+        // we are disabling default JSESSIONID creation from Spring Security by commenting the lines at 45 and 46, we are saying
+        // we are going to take care of our own session management or token management inside my web application
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//                .securityContext().requireExplicitSave(false)
+//                .and().sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .cors().configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
                     config.setAllowedMethods(Collections.singletonList("*"));
                     config.setAllowCredentials(true);
                     config.setAllowedHeaders(Collections.singletonList("*"));
+                    // this way we can expose the headers that we are sending inside the response to the client application,
+                    // otherwise the browser won't accept these headers because there are 2 different origins that are trying to communicate
+                    config.setExposedHeaders(Collections.singletonList(SecurityConstants.JWT_HEADER));
                     // it can allow browser to send cross-origin request upto 1 hr after first preflight request
                     // after maxAge, the browser again sends preflight requests to check if cross-origin is allowed.
                     config.setMaxAge(3600L);
@@ -68,6 +78,8 @@ public class SecurityConfig {
         http.addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class);
         // the order of AuthoritiesLoggingAtFilter execution may be sometimes either before or other times after BasicAuthenticationFilter
         http.addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class);
+        http.addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class);
         http.authorizeHttpRequests((authorize) -> authorize
                 /*.requestMatchers("/account").hasAuthority("VIEWACCOUNT")
                 .requestMatchers("/balance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
