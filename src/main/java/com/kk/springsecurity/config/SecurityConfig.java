@@ -3,6 +3,7 @@ package com.kk.springsecurity.config;
 import com.kk.springsecurity.constants.SecurityConstants;
 import com.kk.springsecurity.filter.AuthoritiesLoggingAfterFilter;
 import com.kk.springsecurity.filter.AuthoritiesLoggingAtFilter;
+import com.kk.springsecurity.filter.CsrfCookieFilter;
 import com.kk.springsecurity.filter.JWTTokenGeneratorFilter;
 import com.kk.springsecurity.filter.JWTTokenValidatorFilter;
 import com.kk.springsecurity.filter.RequestValidationBeforeFilter;
