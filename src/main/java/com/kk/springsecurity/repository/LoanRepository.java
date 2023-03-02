@@ -11,7 +11,7 @@ import java.util.List;
 public interface LoanRepository extends CrudRepository<Loans, Long> {
 
     // this method won't execute if the user doesn't have the role 'USER'
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     List<Loans> findByCustomerIdOrderByStartDtDesc(int customerId);
 
 }
